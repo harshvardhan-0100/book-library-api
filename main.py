@@ -41,10 +41,17 @@ def get_book(book_id: str):
         raise HTTPException(status_code=404, detail="Book not found")
     return books_db[book_id]
 
-# POST /books endpoint
+# POST /books/{book_id} endpoint
 @app.put("/books/{book_id}")
 def update_book(book_id: str, updated_book: Book):
     if book_id not in books_db:
         raise HTTPException(status_code=404, detail="Book not found")
     books_db[book_id] = {"id": book_id, **updated_book.model_dump()}
     return books_db[book_id]
+
+# DELETE /books/{book_id}  (Delete a book)
+@app.delete("/books/{book_id}", status_code=204)
+def delete_book(book_id: str):
+    if book_id not in books_db:
+        raise HTTPException(status_code=404, detail="Book not found")
+    del books_db[book_id]
