@@ -15,8 +15,14 @@ class Book(BaseModel):
 # Temporary in-memory storage
 books_db = {}
 
+# POST endpoint
 @app.post("/books", status_code=201)
 def add_book(book: Book):
     book_id = str(uuid4())
     books_db[book_id] = {"id": book_id, **book.model_dump()}
     return books_db[book_id]
+
+# GET endpoint
+@app.get("/books")
+def get_all_books():
+    return list(books_db.values())
