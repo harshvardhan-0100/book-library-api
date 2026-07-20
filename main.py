@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 from uuid import uuid4
@@ -33,3 +33,10 @@ def add_book(book: Book):
 @app.get("/books")
 def get_all_books():
     return list(books_db.values())
+
+# GET/books/{id} endpoint (reading one book)
+@app.get("/books/{book_id}")
+def get_book(book_id: str):
+    if book_id not in books_db:
+        raise HTTPException(status_code=404, detail="Book not found")
+    return books_db[book_id]
